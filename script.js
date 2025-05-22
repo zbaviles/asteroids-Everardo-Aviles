@@ -5,6 +5,8 @@ function start() {
   document.addEventListener("keydown", keypressHandler);
   document.addEventListener("keyup", keypressHandler);
 
+  createAsteroids();
+
   for (let i = 0; i < 10; i++) {
     const div = document.createElement("div");
     div.classList.add("asteroid");
@@ -20,7 +22,7 @@ function start() {
       s: Math.random() * 100 + 50,
       visual: div,
     };
-    objects.push(obj);
+    asteroids.push(obj);
   }
 
   requestAnimationFrame(tick);
@@ -45,9 +47,39 @@ const controls = {
 
 let points = 0;
 
-const objects = [];
+const asteroids = [];
 
-const object = {
+function moveAsteroids() {
+  for (const asteroid of asteroids) {
+    asteroid.y += asteroid.s * delta;
+    if (asteroid.y > 450) {
+      asteroid.y = -30;
+      asteroid.x = Math.floor(Math.random() * 750);
+    }
+  }
+}
+
+function createAsteroids() {
+  for (let i = 0; i < 10; i++) {
+    const div = document.createElement("div");
+    div.classList.add("asteroid");
+
+    document
+      .querySelector("#gamefield")
+      .insertAdjacentElement("beforeend", div);
+    const obj = {
+      x: Math.floor(Math.random() * 750),
+      y: -30,
+      w: 50,
+      h: 50,
+      s: Math.random() * 100 + 50,
+      visual: div,
+    };
+    asteroids.push(obj);
+  }
+}
+
+const spaceship = {
   x: 380,
   y: 370,
   s: 300,
@@ -55,6 +87,20 @@ const object = {
   h: 80,
   hl: 100,
 };
+
+function moveSpaceship() {
+  if (controls.left && spaceship.x > spaceship.w / 2) {
+    spaceship.x -= spaceship.s * delta;
+  } else if (controls.right && spaceship.x < 770) {
+    spaceship.x += spaceship.s * delta;
+  }
+
+  if (controls.up && spaceship.y > spaceship.h / 2) {
+    spaceship.y -= spaceship.s * delta;
+  } else if (controls.down && spaceship.y < 410) {
+    spaceship.y += spaceship.s * delta;
+  }
+}
 
 let lastTime = 0;
 
@@ -64,23 +110,15 @@ function tick(timestamp) {
   const delta = (timestamp - lastTime) / 1000;
   lastTime = timestamp;
 
-  if (controls.left && object.x > object.w / 2) {
-    object.x -= object.s * delta;
-  } else if (controls.right && object.x < 770) {
-    object.x += object.s * delta;
-  }
+  moveSpaceship();
 
-  if (controls.up && object.y > object.h / 2) {
-    object.y -= object.s * delta;
-  } else if (controls.down && object.y < 410) {
-    object.y += object.s * delta;
-  }
+  moveAsteroids();
 
-  for (let i = 0; i < objects.length; i++) {
-    objects[i].y += objects[i].s * delta;
-    if (objects[i].y > 450) {
-      objects[i].y = -30;
-      objects[i].x = Math.floor(Math.random() * 750);
+  for (const asteroid of asteroids) {
+    asteroid.y += asteroid.s * delta;
+    if (asteroid.y > 450) {
+      asteroid.y = -30;
+      asteroid.x = Math.floor(Math.random() * 750);
     }
   }
 
@@ -114,18 +152,18 @@ function tick(timestamp) {
   }
 
   const visualSpaceShip = document.querySelector(".spaceship");
-  visualSpaceShip.style.translate = `${object.x - object.w / 2}px ${
-    object.y - object.h / 2
+  visualSpaceShip.style.translate = `${spaceship.x - spaceship.w / 2}px ${
+    spaceship.y - spaceship.h / 2
   }px`;
 
-  for (let i = 0; i < objects.length; i++) {
-    objects[i].visual.style.translate = `${objects[i].x - 25}px ${
-      objects[i].y - 25
+  for (const asteroid of asteroids) {
+    asteroid.visual.style.translate = `${asteroid.x - 25}px ${
+      asteroid.y - 25
     }px`;
   }
 
   document.querySelector("#score #number").textContent = String(
     points
   ).padStart(3, "0");
-  document.querySelector("#healthbar").style.width = `${object.hl}%`;
+  document.querySelector("#healthbar").style.width = `${spaceship.hl}%`;
 }
