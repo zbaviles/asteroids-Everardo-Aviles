@@ -84,20 +84,22 @@ function tick(timestamp) {
     }
   }
 
-  for (const obj of objects) {
-    if (distance(obj, object) < obj.w / 2 + object.w / 2) {
+  for (const asteroid of asteroids) {
+    if (distance(asteroid, spaceship) < combinedSize(asteroid, spaceship)) {
       obj.s *= 0.95;
       object.hl--;
     }
   }
 
-  function distance(obj, object) {
+  function distance(objA, objB) {
     return Math.sqrt(
-      Math.pow(obj.x - object.x, 2) + Math.pow(objects[i].y - object.y, 2)
+      Math.pow(objA.x - objB.x, 2) + Math.pow(objA.y - objB.y, 2)
     );
   }
 
-  function combinedSize(obj, object) {}
+  function combinedSize(objA, objB) {
+    return objA.w / 2 + objB.w / 2;
+  }
 
   const visualSpaceShip = document.querySelector(".spaceship");
   visualSpaceShip.style.translate = `${object.x - object.w / 2}px ${
