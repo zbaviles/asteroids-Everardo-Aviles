@@ -9,7 +9,9 @@ function start() {
     const div = document.createElement("div");
     div.classList.add("asteroid");
 
-    document.querySelector("#gamefield").insertAdjacentElement("beforeend", div);
+    document
+      .querySelector("#gamefield")
+      .insertAdjacentElement("beforeend", div);
     const obj = {
       x: Math.floor(Math.random() * 750),
       y: -30,
@@ -82,22 +84,34 @@ function tick(timestamp) {
     }
   }
 
-  for (let i = 0; i < objects.length; i++) {
-    if (Math.sqrt(Math.pow(objects[i].x - object.x, 2) +
-        Math.pow(objects[i].y - object.y, 2)) 
-        < objects[i].w / 2 + object.w / 2) {
-      objects[i].s *= 0.95;
+  for (const obj of objects) {
+    if (distance(obj, object) < obj.w / 2 + object.w / 2) {
+      obj.s *= 0.95;
       object.hl--;
     }
   }
 
-  const visualSpaceShip = document.querySelector(".spaceship");
-  visualSpaceShip.style.translate = `${object.x - object.w / 2}px ${object.y - object.h / 2}px`;
-
-  for (let i = 0; i < objects.length; i++) {
-    objects[i].visual.style.translate = `${objects[i].x - 25}px ${objects[i].y - 25}px`;
+  function distance(obj, object) {
+    return Math.sqrt(
+      Math.pow(obj.x - object.x, 2) + Math.pow(objects[i].y - object.y, 2)
+    );
   }
 
-  document.querySelector("#score #number").textContent = String(points).padStart(3, "0");
+  function combinedSize(obj, object) {}
+
+  const visualSpaceShip = document.querySelector(".spaceship");
+  visualSpaceShip.style.translate = `${object.x - object.w / 2}px ${
+    object.y - object.h / 2
+  }px`;
+
+  for (let i = 0; i < objects.length; i++) {
+    objects[i].visual.style.translate = `${objects[i].x - 25}px ${
+      objects[i].y - 25
+    }px`;
+  }
+
+  document.querySelector("#score #number").textContent = String(
+    points
+  ).padStart(3, "0");
   document.querySelector("#healthbar").style.width = `${object.hl}%`;
 }
