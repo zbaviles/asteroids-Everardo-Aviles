@@ -85,10 +85,22 @@ function tick(timestamp) {
   }
 
   for (const asteroid of asteroids) {
-    if (distance(asteroid, spaceship) < combinedSize(asteroid, spaceship)) {
-      obj.s *= 0.95;
-      object.hl--;
+    if (isColliding(asteroid, spaceship)) {
+      slowDown(asteroid);
+      loseHealth(spaceship);
     }
+  }
+
+  function slowDown(asteroid) {
+    asteroid.s *= 0.95;
+  }
+
+  function loseHealth(spaceship) {
+    spaceship.hl--;
+  }
+
+  function isColliding(asteroid, spaceship) {
+    return distance(asteroid, spaceship) < combinedSize(asteroid, spaceship);
   }
 
   function distance(objA, objB) {
