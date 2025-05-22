@@ -7,24 +7,6 @@ function start() {
 
   createAsteroids();
 
-  for (let i = 0; i < 10; i++) {
-    const div = document.createElement("div");
-    div.classList.add("asteroid");
-
-    document
-      .querySelector("#gamefield")
-      .insertAdjacentElement("beforeend", div);
-    const obj = {
-      x: Math.floor(Math.random() * 750),
-      y: -30,
-      w: 50,
-      h: 50,
-      s: Math.random() * 100 + 50,
-      visual: div,
-    };
-    asteroids.push(obj);
-  }
-
   requestAnimationFrame(tick);
 }
 
@@ -49,7 +31,7 @@ let points = 0;
 
 const asteroids = [];
 
-function moveAsteroids() {
+function moveAsteroids(delta) {
   for (const asteroid of asteroids) {
     asteroid.y += asteroid.s * delta;
     if (asteroid.y > 450) {
@@ -88,7 +70,7 @@ const spaceship = {
   hl: 100,
 };
 
-function moveSpaceship() {
+function moveSpaceship(delta) {
   if (controls.left && spaceship.x > spaceship.w / 2) {
     spaceship.x -= spaceship.s * delta;
   } else if (controls.right && spaceship.x < 770) {
@@ -110,9 +92,9 @@ function tick(timestamp) {
   const delta = (timestamp - lastTime) / 1000;
   lastTime = timestamp;
 
-  moveSpaceship();
+  moveSpaceship(delta);
 
-  moveAsteroids();
+  moveAsteroids(delta);
 
   for (const asteroid of asteroids) {
     asteroid.y += asteroid.s * delta;
