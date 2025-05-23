@@ -97,14 +97,6 @@ function tick(timestamp) {
   moveAsteroids(delta);
 
   for (const asteroid of asteroids) {
-    asteroid.y += asteroid.s * delta;
-    if (asteroid.y > 450) {
-      asteroid.y = -30;
-      asteroid.x = Math.floor(Math.random() * 750);
-    }
-  }
-
-  for (const asteroid of asteroids) {
     if (isColliding(asteroid, spaceship)) {
       slowDown(asteroid);
       loseHealth(spaceship);
